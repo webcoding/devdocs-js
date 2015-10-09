@@ -154,6 +154,7 @@ gulp.task('styles', function () {
     .pipe($.sass())
     .pipe($.autoprefixer({browsers: AUTOPREFIXER_BROWSERS}))
     .pipe($.rename(function(path){
+      //{ dirname: '.', basename: 'application.css', extname: '.css' }
       path.basename = path.basename.replace('.css','').replace('application','app');
     }))
     .pipe($.sourcemaps.write())
@@ -167,7 +168,7 @@ gulp.task('styles', function () {
     .pipe($.size({title: 'styles'}));
 });
 
-// 打包 Common JS 模块
+// 打包 Common JS 模块，此处使用 ES6 的话，需要调整设置
 var b = browserify({
   cache: {},
   packageCache: {},

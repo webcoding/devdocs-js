@@ -8,12 +8,16 @@
   "engines": {
     "node": ">= 0.10"
   },
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha --compilers js:babel/register",
+    "docs-dev": "webpack --config webpack-docs.config.js --watch",
+    "docs-publish": "webpack --config webpack-docs.config.js --min"
+  },
   "browserify": {
     "transform": [
       [
         "reactify",
-        "babelify",
-        {
+        "babelify", {
           "es6": true
         }
       ]
@@ -95,9 +99,6 @@
     "watchify": "^3.2.1",
     "webpack": "^1.9.10",
     "webpack-dev-server": "^1.9.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {
     "react": "*"
