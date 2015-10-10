@@ -11,6 +11,7 @@ var del = require('del');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
 var browserify = require('browserify');
+var babelify = require('babelify');
 var watchify = require('watchify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
@@ -30,6 +31,7 @@ var AUTOPREFIXER_BROWSERS = [
 ];
 
 var paths = {
+  bootjs: 'app.jsx',
   dist: {
     base: 'dist',
     js: 'dist/js',
@@ -105,7 +107,7 @@ gulp.task('copy:venders', function () {
     .pipe($.size({title: 'copy:venders'}));
 });
 // 拷贝相关资源
-gulp.task('copy', function () {
+gulp.task('copy', ['copy:venders'], function () {
   return gulp.src([
     'app/**/*',
     '!app/*.html',
@@ -168,12 +170,14 @@ gulp.task('styles', function () {
     .pipe($.size({title: 'styles'}));
 });
 
-// 打包 Common JS 模块，此处使用 ES6 的话，需要调整设置
+// 打包 Common JS 模块，此处使用 ES6 的话，选用 babel 编译 ES6，需要调整设置
+// TODO: 是否将 browserify 改为使用 webpack 来实现
 var b = browserify({
   cache: {},
   packageCache: {},
-  entries: ['./app/js/app.js'],
+  entries: [('./app/js/' + paths.bootjs)],
   debug: !isProduction,
+  // extensions: [".jsx"],
   transform: ['babelify']
 });
 
@@ -204,12 +208,13 @@ b.transform('browserify-shim', {global: true});
 
 var bundle = function() {
   var s = (
-    b.bundle()
+    b.transform(babelify).bundle()
       .on('error', $.util.log.bind($.util, 'Browserify Error'))
-      .pipe(source('app.js'))
+      .pipe( source(paths.bootjs) )
       .pipe(buffer())
       // .pipe($.sourcemaps.init())
       // .pipe($.sourcemaps.write("."))
+      .pipe($.rename('app.js'))
       .pipe(gulp.dest(paths.dist.js))
       .pipe($.size({title: 'script'}))
   );
@@ -261,13 +266,13 @@ gulp.task('watch', function() {
 // 启动预览服务，并监视 Dist 目录变化自动刷新浏览器
 gulp.task('dev', ['default', 'watch'], function () {
   browserSync({
-    // port: 5000, //默认3000
-    // ui: {    //更改默认端口weinre 3001
-    //     port: 5001,
-    //     weinre: {
-    //         port: 9090
-    //     }
-    // },
+    port: 5000, //默认3000
+    ui: {    //更改默认端口weinre 3001
+        port: 5001,
+        weinre: {
+            port: 9090
+        }
+    },
     // server: {
     //   baseDir: 'dist/docs'
     // },
@@ -284,7 +289,7 @@ gulp.task('dev', ['default', 'watch'], function () {
 gulp.task('default', function (cb) {
   console.log('生产环境：' + isProduction);
   //runSequence('clean', ['styles', 'jshint', 'html', 'images', 'copy', 'browserify'], cb);
-  runSequence('clean', ['styles', 'html', 'images', 'copy:venders', 'copy', 'browserify'], cb);
+  runSequence('clean', ['styles', 'html', 'images', 'copy', 'browserify'], cb);
 });
 
 

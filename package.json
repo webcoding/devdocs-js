@@ -105,6 +105,7 @@
   },
   "browser": {},
   "browserify-shim": {
+    "react-dom": "global:ReactDOM",
     "react": "global:React"
   }
 }
