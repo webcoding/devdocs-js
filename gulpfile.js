@@ -63,7 +63,7 @@ var paths = {
 
 // JavaScript 格式校验
 gulp.task('jshint', function () {
-  return gulp.src('app/js/**/*.js')
+  return gulp.src('app/js/**/*.jsx')
     .pipe(reload({stream: true, once: true}))
     .pipe($.eslint())
     .pipe($.eslint.format())
@@ -159,6 +159,7 @@ gulp.task('styles', function () {
       //{ dirname: '.', basename: 'application.css', extname: '.css' }
       path.basename = path.basename.replace('.css','').replace('application','app');
     }))
+    .pipe($.replace(/image-url([\(\"\']*)(icons.*\.png)/g, "url$1../i/$2"))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('dist/css'))
   );
@@ -258,7 +259,7 @@ gulp.task('clean', function(cb) {
 // 监视源文件变化自动cd编译
 gulp.task('watch', function() {
   gulp.watch('app/**/*.html', ['html']);
-  gulp.watch('app/less/**/*less', ['styles']);
+  // gulp.watch('app/less/**/*less', ['styles']);
   gulp.watch('app/scss/**/*scss', ['styles']);
   gulp.watch('app/i/**/*', ['images']);
 });
@@ -277,12 +278,12 @@ gulp.task('dev', ['default', 'watch'], function () {
     //   baseDir: 'dist/docs'
     // },
     open: "local", //external
-    notify: false,
+    notify: true,
     logPrefix: 'ASK',
     server: 'dist'
   });
 
-  gulp.watch(['dist/**/*'], reload);
+  gulp.watch(['dist/**/*'], reload); //这里使用 ES6 后，修改文件没有 reload，还没找到原因？
 });
 
 // 默认任务
@@ -291,6 +292,34 @@ gulp.task('default', function (cb) {
   //runSequence('clean', ['styles', 'jshint', 'html', 'images', 'copy', 'browserify'], cb);
   runSequence('clean', ['styles', 'html', 'images', 'copy', 'browserify'], cb);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // 转为 twig 格式发布

@@ -19,8 +19,6 @@
 import ReactDOM from 'react-dom'
 const AppRoutes = require('./app-routes.jsx')
 
-console.log('helloooo')
-
 ReactDOM.render(
   AppRoutes,
   document.body

@@ -3,6 +3,9 @@
 import {Route, Router} from 'react-router'
 import createHistory from 'history/lib/createHashHistory'
 
+// var DefaultRoute = Router.DefaultRoute;
+// var NotFoundRoute = Router.NotFoundRoute;
+
 const history = createHistory({ queryKey: false })
 let menulist = []
 
@@ -21,12 +24,17 @@ let menulist = []
 
 // import Master from './pages/master.jsx'
 // import Home from './pages/home.jsx'
-import Home from './test.jsx'
+import Home from './pages/app.jsx'
+import NotFoundRoute from './modules/404.jsx'
+import ErrRoute from './modules/500.jsx'
 
 /*
-<Route path="/home" component={Home} />
-{menulist}
-<Route path="/build" component={require('./pages/build.jsx')} />
+<Route name="app" path="/" handler={Application}>
+  <DefaultRoute handler={Index}/>
+  <Route name='brand' path="/brand/:brand_id" handler={BrandList} />
+
+  <NotFoundRoute handler={NotFound} />
+</Route>
 */
 
 const AppRoutes = (

@@ -17,7 +17,8 @@
     "transform": [
       [
         "reactify",
-        "babelify", {
+        "babelify",
+        {
           "es6": true
         }
       ]

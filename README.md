@@ -53,3 +53,8 @@ NODE_ENV=production gulp
 ```
 gulp publish
 ```
+
+
+## 数据更新
+
+使用 jsdom 拉取远程内容，进行更新
